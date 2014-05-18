@@ -5,10 +5,15 @@
 #     -w /srv/app \
 #     -p 8888:8888 \
 #     -t purzelrakete/ijulia-nightly \
-#     ipython notebook --profile ijulia --pylab inline
+#     ijulia
 #
 # The notebook will be available at http://localhost:8888/. Notebooks will be
 # saved and served out of the current host directory.
+#
+# Note that if your are using boot2docker on OSX, you may have to fiddle with
+# forwarded ports:
+#
+# https://github.com/boot2docker/boot2docker/blob/master/doc/WORKAROUNDS.md
 
 FROM purzelrakete/ipython
 
@@ -22,5 +27,7 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install sudo julia
 
 RUN julia -e 'Pkg.add("IJulia")'
+
+ADD ijulia /usr/bin/ijulia
 
 EXPOSE 8888
