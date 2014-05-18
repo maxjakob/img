@@ -3,11 +3,11 @@
 #   docker run \
 #     -v $(pwd):/srv/app  \
 #     -w /srv/app \
-#     -p 8080:8888 \
+#     -p 8888:8888 \
 #     -t purzelrakete/ijulia-nightly \
-#     ipython notebook --profile ijulia
+#     ipython notebook --profile ijulia --pylab inline
 #
-# The notebook will be available at http://localhost:8080/. Notebooks will be
+# The notebook will be available at http://localhost:8888/. Notebooks will be
 # saved and served out of the current host directory.
 
 FROM purzelrakete/ipython
@@ -22,3 +22,5 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install sudo julia
 
 RUN julia -e 'Pkg.add("IJulia")'
+
+EXPOSE 8888
