@@ -25,7 +25,7 @@ RUN add-apt-repository ppa:staticfloat/julianightlies
 RUN add-apt-repository ppa:staticfloat/julia-deps
 RUN apt-get update
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install sudo julia
+RUN DEBIAN_FRONTEND=noninteractive apt-get -q -y install curl wget git vim tmux sudo julia
 
 RUN julia -e 'Pkg.add("IJulia")'
 
