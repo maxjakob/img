@@ -1,0 +1,11 @@
+DataFrames
+Distributions
+Gadfly
+Graphs
+IJulia
+MCMC
+PyCall
+PyPlot
+StatsBase
+TextAnalysis
+Winston
