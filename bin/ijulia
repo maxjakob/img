@@ -1,0 +1,46 @@
+#!/bin/bash
+
+usage() {
+  echo run ijulia container over current directory. usage:
+  echo "  ijulia <--start|--stop>"
+  echo
+}
+
+start() {
+  docker start ijulia || \
+  docker run \
+    --rm \
+    --volume $(pwd):/srv/app  \
+    --workdir /srv/app \
+    --publish 8888:8888 \
+    --name ijulia \
+    --tty \
+    purzelrakete/ijulia-nightly ijulia
+}
+
+stop() {
+  echo stopping ijulia...
+  docker stop ijulia
+}
+
+while test "$#" -gt 0
+do
+  case "$1" in
+    --help|-h)
+      usage && exit 0
+      ;;
+    --start|-s)
+      { start && exit 0 || echo >&2 could not start ijulia; exit 1; }
+      ;;
+    --stop|-h)
+      { stop && exit 0 || echo >&2 could not stop ijulia; exit 1; }
+      ;;
+    *)
+      break
+      echo foo
+      ;;
+  esac
+done
+
+# no arguments were passed
+usage && exit 1
