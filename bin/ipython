@@ -59,7 +59,7 @@ main() {
   done
 
   # no arguments were passed
-  usage && exit 2
+  echo ${usage} && exit 2
 }
 
 main "$@"
