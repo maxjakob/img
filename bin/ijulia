@@ -1,29 +1,31 @@
 #!/bin/bash
+#
+# run ijulia container over current directory
 
-usage() {
-  echo run ijulia container over current directory. usage:
-  echo "  ijulia <--start|--stop|--remove>"
-  echo
-}
+readonly image="purzelrakete/ijulia-nightly"
+readonly usage="run ijulia container over current directory. usage:
+  ijulia <--start|--stop|--remove>"
 
-image=${image:-purzelrakete/ijulia-nightly}
-
+# start an ijulia container. saves container as 'ijulia'
+# the first time it is invoked, next time runs that container.
 start() {
-  2>/dev/null docker start ijulia || docker run \
+  2>/dev/null docker start -v $(pwd):/srv/app ijulia || docker run \
     --name ijulia \
     --publish 8888:8888 \
     --rm \
     --tty \
-    --volume $(pwd):/srv/app  \
+    -v $(pwd):/srv/app  \
     --workdir /srv/app \
     $image ijulia
 }
 
+# stop the ijulia container
 stop() {
   echo stopping ijulia...
   docker stop ijulia
 }
 
+# removes the ijulia container and deletes image.
 remove() {
   echo removing ijulia... && (
     exec &>/dev/null
@@ -33,27 +35,31 @@ remove() {
   )
 }
 
-while test "$#" -gt 0
-do
-  case "$1" in
-    --help|-h)
-      usage && exit 0
-      ;;
-    --start|-s)
-      start && exit 0 || { echo >&2 could not start ijulia; exit 1; }
-      ;;
-    --stop|-h)
-      stop && exit 0 || { echo >&2 could not stop ijulia; exit 1; }
-      ;;
-    --remove|-r)
-      remove
-      exit 0
-      ;;
-    *)
-      break
-      ;;
-  esac
-done
+main() {
+  while test "$#" -gt 0
+  do
+    case "$1" in
+      --help|-h)
+        echo "${usage}" && exit 0
+        ;;
+      --start|-s)
+        start && exit 0 || { echo >&2 could not start ijulia; exit 1; }
+        ;;
+      --stop|-h)
+        stop && exit 0 || { echo >&2 could not stop ijulia; exit 1; }
+        ;;
+      --remove|-r)
+        remove
+        exit 0
+        ;;
+      *)
+        break
+        ;;
+    esac
+  done
 
-# no arguments were passed
-usage && exit 2
+  # no arguments were passed
+  usage && exit 2
+}
+
+main "$@"

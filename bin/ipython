@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# run ipython container over current directory
+
+readonly image="purzelrakete/ipython"
+readonly usage="run ipython container over current directory. usage:
+  ipython <--start|--stop|--remove>"
+
+# start an ipython container. saves container as 'ipython'
+# the first time it is invoked, next time runs that container.
+start() {
+  2>/dev/null docker start -v $(pwd):/srv/app ipython || docker run \
+    --name ipython \
+    --publish 8888:8888 \
+    --rm \
+    --tty \
+    -v $(pwd):/srv/app  \
+    --workdir /srv/app \
+    $image ipython
+}
+
+# stop the ipython container
+stop() {
+  echo stopping ipython
+  docker stop ipython
+}
+
+# removes the ipython container and deletes image.
+remove() {
+  echo removing ipython && (
+    exec &>/dev/null
+    stop
+    docker rm ipython
+    docker rmi -f $image
+  )
+}
+
+main() {
+  while test "$#" -gt 0
+  do
+    case "$1" in
+      --help|-h)
+        echo "${usage}" && exit 0
+        ;;
+      --start|-s)
+        start && exit 0 || { echo >&2 could not start ipython; exit 1; }
+        ;;
+      --stop|-h)
+        stop && exit 0 || { echo >&2 could not stop ipython; exit 1; }
+        ;;
+      --remove|-r)
+        remove
+        exit 0
+        ;;
+      *)
+        break
+        ;;
+    esac
+  done
+
+  # no arguments were passed
+  usage && exit 2
+}
+
+main "$@"
