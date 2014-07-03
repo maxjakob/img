@@ -16,7 +16,7 @@ start() {
     --tty \
     -v $(pwd):/srv/app  \
     --workdir /srv/app \
-    $image ipython
+    $image ipython-start
 }
 
 # stop the ipython container
