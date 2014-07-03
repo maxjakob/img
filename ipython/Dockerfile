@@ -20,3 +20,5 @@ RUN pip install patsy
 RUN pip install statsmodels
 RUN pip install bokeh
 RUN pip install pylint==1.2.0
+
+ADD ipython /usr/bin/ipython

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+set -u
+
+ipython notebook \
+  --port 8888 \
+  --ip 0.0.0.0 \
+  --no-browser
